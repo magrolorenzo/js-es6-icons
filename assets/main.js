@@ -13,10 +13,12 @@
 // Popolare le options della select dinamicamente
 // e, ogni volta che cambia il valore selezionato, visualizzare le icone corrispondenti.
 
-// ******************************
 
 // Array copiato da repo di Sofia
-const icons = [
+$(document).ready( function (){
+    // Template del elemento html icona  --->  <i class="fas fa-apple-alt"></i>
+
+    const icons = [
     {
         name: 'cat',
         prefix: 'fa-',
@@ -114,22 +116,38 @@ const icons = [
         family: 'fas'
     }
 ];
+    const colors = ["blue", "green", "coral"];
+    const icon_types = [];
 
-// Template del elemento html icona  --->  <i class="fas fa-apple-alt"></i>
+    // Ciclo per salvataggio tipi di Icone
+    icons.forEach((icon) =>{
+        let {type} = icon;
 
-icons.forEach((icon) => {
+        if(!icon_types.includes(type)){
+            icon_types.push(type);
+            console.log("Inserito tipo " + type);
+        };
+    });
 
-    // Per ogni icona mi salvo prefix, family e name per ricreare la stringa html
-    let {family, prefix, name} = icon;
-    let html_string = '<i class="' + family + ' ' + prefix + name + '"></i>';
+    // Funzione finale per stampa a video con append
+    icons.forEach((icon) => {
+        // Per ogni icona mi salvo prefix, family e name per ricreare la stringa html
+        let {family, prefix, name, type} = icon;
 
-    console.log(html_string);
+        let indice_tipo = icon_types.indexOf(type);
+        let coloreIcona = colors[indice_tipo];
+        console.log(coloreIcona);
 
-    $('#icon-wrapper').append(`
-        <div class="icon">
-            ${html_string}
-            <p>${name}</p>
-        </div>
-    `);
+        let html_string = '<i class="' + family + ' ' + prefix + name + '" style = "color:' + coloreIcona + '"></i>';
 
+        console.log(html_string);
+
+        $('#icon-wrapper').append(`
+                <div class="icon">
+                    ${html_string}
+                    <p>${name}</p>
+                </div>
+            `);
+
+        });
 });
