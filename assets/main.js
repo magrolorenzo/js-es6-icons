@@ -120,34 +120,73 @@ $(document).ready( function (){
     const icon_types = [];
 
     // Ciclo per salvataggio tipi di Icone
-    icons.forEach((icon) =>{
-        let {type} = icon;
+    icons.forEach((icon) => getTypes(icon, icon_types));
 
-        if(!icon_types.includes(type)){
-            icon_types.push(type);
-            console.log("Inserito tipo " + type);
+    // Per ogni icona mi salvo prefix, family e name per ricreare la stringa html
+    icons.forEach((icon) => addIcon(icon));
+
+    icon_types.forEach((type) => {
+        $("#select-tipo").append(`
+            <option value="${type}">${type}</option>
+        `)
+    });
+
+    $("#select-tipo").change(() =>{
+        // Estraggo il valore selezionato
+        const selected_type = $('#select-tipo').val();
+        console.log(selected_type);
+
+        if(selected_type!="all"){
+            // Nascondo tutte le Icone
+            $("#icon-wrapper").empty();
+            // Salvo in un array solo quelle con tipo corrispondente
+            const selected_icons = icons.filter((icon) =>{
+                return icon.type == selected_type;
+            });
+            console.log(selected_icons);
+            // E mostro solo quelle con il selected_type corrispondente
+            selected_icons.forEach((icon) => addIcon(icon));
+        } else {
+            $("#icon-wrapper").empty();
+            icons.forEach((icon) => addIcon(icon));
         };
     });
 
-    // Funzione finale per stampa a video con append
-    icons.forEach((icon) => {
-        // Per ogni icona mi salvo prefix, family e name per ricreare la stringa html
-        let {family, prefix, name, type} = icon;
 
+
+
+
+
+// **** Funzioni
+
+    // Funzione per popolare l array dei tipi di icone
+    function getTypes(icon_obj, array_t){
+        let {type} = icon_obj;
+
+        if(!array_t.includes(type)){
+            array_t.push(type);
+            console.log("Inserito tipo " + type);
+        };
+    }
+
+    // Funzione finale per stampa a video con append
+    function addIcon(icon){
+
+        let {family, prefix, name, type} = icon;
         let indice_tipo = icon_types.indexOf(type);
         let coloreIcona = colors[indice_tipo];
-        console.log(coloreIcona);
-
         let html_string = '<i class="' + family + ' ' + prefix + name + '" style = "color:' + coloreIcona + '"></i>';
 
-        console.log(html_string);
-
         $('#icon-wrapper').append(`
-                <div class="icon">
-                    ${html_string}
-                    <p>${name}</p>
-                </div>
+            <div class="icon">
+            ${html_string}
+            <p>${name}</p>
+            </div>
             `);
+    };
 
-        });
+
+
+
+
 });
